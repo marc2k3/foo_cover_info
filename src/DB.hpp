@@ -19,5 +19,5 @@ namespace cinfo
 	metadb_index_manager::ptr theAPI();
 	void refresh(const HashList& hashes);
 	void reset(metadb_handle_list_cref handles);
-	void set(const metadb_index_transaction::ptr& ptr, metadb_index_hash hash, Fields f);
+	void set(const metadb_index_transaction::ptr& ptr, metadb_index_hash hash, const Fields& f);
 }

@@ -59,7 +59,7 @@ namespace cinfo
 	public:
 		bool process_field(uint32_t index, metadb_handle* handle, titleformat_text_out* out) override
 		{
-			metadb_index_hash hash;
+			metadb_index_hash hash{};
 			if (!hashHandle(handle, hash)) return false;
 
 			const Fields f = get(hash);
@@ -203,7 +203,7 @@ namespace cinfo
 		const size_t count = handles.get_count();
 		for (const size_t i : std::views::iota(0U, count))
 		{
-			metadb_index_hash hash;
+			metadb_index_hash hash{};
 			if (hashHandle(handles[i], hash) && hashes.emplace(hash).second)
 			{
 				set(transaction_ptr, hash, Fields());
@@ -214,7 +214,7 @@ namespace cinfo
 		refresh(to_refresh);
 	}
 
-	void set(const metadb_index_transaction::ptr& ptr, metadb_index_hash hash, Fields f)
+	void set(const metadb_index_transaction::ptr& ptr, metadb_index_hash hash, const Fields& f)
 	{
 		stream_writer_formatter_simple writer;
 		writer << f.front_cover_width;

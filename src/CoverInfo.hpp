@@ -27,7 +27,7 @@ namespace cinfo
 				status.set_progress(i + 1, count);
 				status.set_item_path(path);
 
-				metadb_index_hash hash;
+				metadb_index_hash hash{};
 				if (!hashHandle(handle, hash)) continue;
 				if (!hashes.emplace(hash).second) continue;
 
