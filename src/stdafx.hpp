@@ -3,7 +3,6 @@
 #define WINVER _WIN32_WINNT_WIN7
 
 #include <array>
-#include <ranges>
 #include <set>
 
 #include <foobar2000/SDK/foobar2000.h>

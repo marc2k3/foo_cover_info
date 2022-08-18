@@ -12,19 +12,19 @@ namespace cinfo
 			auto image_api = fb2k::imageLoaderLite::get();
 			auto transaction_ptr = metadb_index_manager_v2::get()->begin_transaction();
 
-			const size_t count = m_handles.get_count();
-			uint32_t files{}, found{};
 			HashList to_refresh;
 			HashSet hashes;
+			const size_t count = m_handles.get_count();
+			size_t index{};
+			uint32_t files{}, found{};
 
-			for (const size_t i : std::views::iota(0U, count))
+			for (auto&& handle : m_handles)
 			{
 				abort.check();
 
-				const metadb_handle_ptr handle = m_handles[i];
 				const pfc::string8 path = handle->get_path();
 
-				status.set_progress(i + 1, count);
+				status.set_progress(++index, count);
 				status.set_item_path(path);
 
 				metadb_index_hash hash{};

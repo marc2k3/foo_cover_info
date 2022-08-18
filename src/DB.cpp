@@ -123,7 +123,7 @@ namespace cinfo
 			const size_t count = from.get_count();
 			auto transaction_ptr = metadb_index_manager_v2::get()->begin_transaction();
 
-			for (const size_t i : std::views::iota(0U, count))
+			for (size_t i = 0; i < count; ++i)
 			{
 				metadb_index_hash old_hash = generate_hash(from[i]);
 				metadb_index_hash new_hash = generate_hash(to[i]);
@@ -200,11 +200,10 @@ namespace cinfo
 		HashSet hashes;
 		auto transaction_ptr = metadb_index_manager_v2::get()->begin_transaction();
 
-		const size_t count = handles.get_count();
-		for (const size_t i : std::views::iota(0U, count))
+		for (auto&& handle : handles)
 		{
 			metadb_index_hash hash{};
-			if (hashHandle(handles[i], hash) && hashes.emplace(hash).second)
+			if (hashHandle(handle, hash) && hashes.emplace(hash).second)
 			{
 				set(transaction_ptr, hash, Fields());
 				to_refresh += hash;
