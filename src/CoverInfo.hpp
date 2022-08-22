@@ -15,8 +15,7 @@ namespace cinfo
 			HashList to_refresh;
 			HashSet hashes;
 			const size_t count = m_handles.get_count();
-			size_t index{};
-			uint32_t files{}, found{};
+			size_t index{}, files{}, found{};
 
 			for (auto&& handle : m_handles)
 			{
@@ -27,8 +26,7 @@ namespace cinfo
 				status.set_progress(++index, count);
 				status.set_item_path(path);
 
-				metadb_index_hash hash{};
-				if (!hashHandle(handle, hash)) continue;
+				const auto hash = get_hash(path);
 				if (!hashes.emplace(hash).second) continue;
 
 				album_art_extractor::ptr ptr;

@@ -16,7 +16,7 @@ namespace cinfo
 	public:
 		metadb_index_hash transform(const file_info& info, const playable_location& location) override
 		{
-			return generate_hash(location.get_path());
+			return get_hash(location.get_path());
 		}
 	};
 
@@ -59,9 +59,7 @@ namespace cinfo
 	public:
 		bool process_field(uint32_t index, metadb_handle* handle, titleformat_text_out* out) override
 		{
-			metadb_index_hash hash{};
-			if (!hashHandle(handle, hash)) return false;
-
+			const auto hash = get_hash(handle->get_path());
 			const Fields f = get(hash);
 
 			switch (index)
@@ -125,8 +123,8 @@ namespace cinfo
 
 			for (size_t i = 0; i < count; ++i)
 			{
-				metadb_index_hash old_hash = generate_hash(from[i]);
-				metadb_index_hash new_hash = generate_hash(to[i]);
+				metadb_index_hash old_hash = get_hash(from[i]);
+				metadb_index_hash new_hash = get_hash(to[i]);
 				set(transaction_ptr, new_hash, get(old_hash));
 				to_refresh += new_hash;
 
@@ -168,12 +166,7 @@ namespace cinfo
 		return Fields();
 	}
 
-	bool hashHandle(const metadb_handle_ptr& handle, metadb_index_hash& hash)
-	{
-		return g_client->hashHandle(handle, hash);
-	}
-
-	metadb_index_hash generate_hash(const char* path)
+	metadb_index_hash get_hash(const char* path)
 	{
 		pfc::string8 tmp;
 		filesystem::g_get_display_path(path, tmp);
@@ -196,14 +189,15 @@ namespace cinfo
 
 	void reset(metadb_handle_list_cref handles)
 	{
+		auto transaction_ptr = metadb_index_manager_v2::get()->begin_transaction();
+
 		HashList to_refresh;
 		HashSet hashes;
-		auto transaction_ptr = metadb_index_manager_v2::get()->begin_transaction();
 
 		for (auto&& handle : handles)
 		{
-			metadb_index_hash hash{};
-			if (hashHandle(handle, hash) && hashes.emplace(hash).second)
+			const auto hash = get_hash(handle->get_path());
+			if (hashes.emplace(hash).second)
 			{
 				set(transaction_ptr, hash, Fields());
 				to_refresh += hash;
