@@ -11,24 +11,23 @@ namespace cinfo
 		{
 			auto image_api = fb2k::imageLoaderLite::get();
 			auto transaction_ptr = metadb_index_manager_v2::get()->begin_transaction();
+			auto recs = metadb_v2::get()->queryMultiSimple(m_handles);
 
 			HashList to_refresh;
 			HashSet hashes;
 			const size_t count = m_handles.get_count();
-			size_t index{};
 			uint32_t files{}, found{};
 
-			for (auto&& handle : m_handles)
+			for (size_t i = 0; i < count; ++i)
 			{
 				abort.check();
 
-				const pfc::string8 path = handle->get_path();
+				const pfc::string8 path = m_handles[i]->get_path();
 
-				status.set_progress(++index, count);
+				status.set_progress(i + 1, count);
 				status.set_item_path(path);
 
-				metadb_index_hash hash{};
-				if (!hashHandle(handle, hash)) continue;
+				const auto hash = get_hash(recs[i], m_handles[i]->get_location());
 				if (!hashes.emplace(hash).second) continue;
 
 				album_art_extractor::ptr ptr;

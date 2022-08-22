@@ -14,7 +14,7 @@ namespace cinfo
 	using HashSet = std::set<metadb_index_hash>;
 
 	Fields get(metadb_index_hash hash);
-	bool hashHandle(const metadb_handle_ptr& handle, metadb_index_hash& hash);
+	metadb_index_hash get_hash(const metadb_v2::rec_t& rec, const playable_location& location);
 	metadb_index_hash generate_hash(const char* path);
 	metadb_index_manager::ptr theAPI();
 	void refresh(const HashList& hashes);

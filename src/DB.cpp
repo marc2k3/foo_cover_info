@@ -54,14 +54,17 @@ namespace cinfo
 		}
 	};
 
-	class MetadbDisplayFieldProvider : public metadb_display_field_provider
+	class MetadbDisplayFieldProviderV2 : public metadb_display_field_provider_v2
 	{
 	public:
 		bool process_field(uint32_t index, metadb_handle* handle, titleformat_text_out* out) override
 		{
-			metadb_index_hash hash{};
-			if (!hashHandle(handle, hash)) return false;
+			return process_field_v2(index, handle, handle->query_v2_(), out);
+		}
 
+		bool process_field_v2(uint32_t index, metadb_handle* handle, const metadb_v2::rec_t& rec, titleformat_text_out* out)
+		{
+			const auto hash = get_hash(rec, handle->get_location());
 			const Fields f = get(hash);
 
 			switch (index)
@@ -145,7 +148,7 @@ namespace cinfo
 	FB2K_SERVICE_FACTORY(FileOperationCallback);
 	FB2K_SERVICE_FACTORY(InitStageCallback);
 	FB2K_SERVICE_FACTORY(InitQuit);
-	FB2K_SERVICE_FACTORY(MetadbDisplayFieldProvider);
+	FB2K_SERVICE_FACTORY(MetadbDisplayFieldProviderV2);
 
 	Fields get(metadb_index_hash hash)
 	{
@@ -168,9 +171,9 @@ namespace cinfo
 		return Fields();
 	}
 
-	bool hashHandle(const metadb_handle_ptr& handle, metadb_index_hash& hash)
+	metadb_index_hash get_hash(const metadb_v2::rec_t& rec, const playable_location& location)
 	{
-		return g_client->hashHandle(handle, hash);
+		return g_client->transform(rec.info->info(), location);
 	}
 
 	metadb_index_hash generate_hash(const char* path)
@@ -196,14 +199,17 @@ namespace cinfo
 
 	void reset(metadb_handle_list_cref handles)
 	{
+		auto transaction_ptr = metadb_index_manager_v2::get()->begin_transaction();
+		auto recs = metadb_v2::get()->queryMultiSimple(handles);
+
 		HashList to_refresh;
 		HashSet hashes;
-		auto transaction_ptr = metadb_index_manager_v2::get()->begin_transaction();
+		const size_t count = handles.get_count();
 
-		for (auto&& handle : handles)
+		for (size_t i = 0; i < count; ++i)
 		{
-			metadb_index_hash hash{};
-			if (hashHandle(handle, hash) && hashes.emplace(hash).second)
+			const auto hash = get_hash(recs[i], handles[i]->get_location());
+			if (hashes.emplace(hash).second)
 			{
 				set(transaction_ptr, hash, Fields());
 				to_refresh += hash;
