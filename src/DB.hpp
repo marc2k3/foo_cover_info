@@ -15,7 +15,7 @@ namespace cinfo
 
 	Fields get(metadb_index_hash hash);
 	metadb_index_hash get_hash(const char* path);
-	metadb_index_manager::ptr theAPI();
+	metadb_index_manager_v2::ptr theAPI();
 	void refresh(const HashList& hashes);
 	void reset(metadb_handle_list_cref handles);
 	void set(const metadb_index_transaction::ptr& ptr, metadb_index_hash hash, const Fields& f);

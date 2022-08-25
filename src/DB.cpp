@@ -21,7 +21,7 @@ namespace cinfo
 	};
 
 	static auto g_client = new service_impl_single_t<MetadbIndexClient>;
-	static metadb_index_manager::ptr g_cachedAPI;
+	static metadb_index_manager_v2::ptr g_cachedAPI;
 
 	class InitStageCallback : public init_stage_callback
 	{
@@ -30,7 +30,7 @@ namespace cinfo
 		{
 			if (stage == init_stages::before_config_read)
 			{
-				g_cachedAPI = metadb_index_manager::get();
+				g_cachedAPI = metadb_index_manager_v2::get();
 				try
 				{
 					g_cachedAPI->add(g_client, guid_metadb_index, system_time_periods::week * 4);
@@ -119,7 +119,7 @@ namespace cinfo
 		{
 			HashList to_refresh;
 			const size_t count = from.get_count();
-			auto transaction_ptr = metadb_index_manager_v2::get()->begin_transaction();
+			auto transaction_ptr = theAPI()->begin_transaction();
 
 			for (size_t i = 0; i < count; ++i)
 			{
@@ -173,10 +173,10 @@ namespace cinfo
 		return hasher_md5::get()->process_single_string(tmp).xorHalve();
 	}
 
-	metadb_index_manager::ptr theAPI()
+	metadb_index_manager_v2::ptr theAPI()
 	{
 		if (g_cachedAPI.is_valid()) return g_cachedAPI;
-		return metadb_index_manager::get();
+		return metadb_index_manager_v2::get();
 	}
 
 	void refresh(const HashList& hashes)
@@ -189,7 +189,7 @@ namespace cinfo
 
 	void reset(metadb_handle_list_cref handles)
 	{
-		auto transaction_ptr = metadb_index_manager_v2::get()->begin_transaction();
+		auto transaction_ptr = theAPI()->begin_transaction();
 
 		HashList to_refresh;
 		HashSet hashes;

@@ -10,7 +10,7 @@ namespace cinfo
 		void run(threaded_process_status& status, abort_callback& abort) override
 		{
 			auto image_api = fb2k::imageLoaderLite::get();
-			auto transaction_ptr = metadb_index_manager_v2::get()->begin_transaction();
+			auto transaction_ptr = theAPI()->begin_transaction();
 
 			HashList to_refresh;
 			HashSet hashes;
