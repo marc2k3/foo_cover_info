@@ -27,7 +27,7 @@ namespace cinfo
 			return guid_context_group;
 		}
 
-		bool context_get_display(uint32_t index, metadb_handle_list_cref handles, pfc::string_base& out, uint32_t& displayflags, const GUID& caller) override
+		bool context_get_display(uint32_t index, metadb_handle_list_cref, pfc::string_base& out, uint32_t&, const GUID&) override
 		{
 			get_item_name(index, out);
 			return true;
@@ -44,7 +44,7 @@ namespace cinfo
 			return pfc::downcast_guarded<uint32_t>(context_items.size());
 		}
 
-		void context_command(uint32_t index, metadb_handle_list_cref handles, const GUID& caller) override
+		void context_command(uint32_t index, metadb_handle_list_cref handles, const GUID&) override
 		{
 			if (index == 0)
 			{

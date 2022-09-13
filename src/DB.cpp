@@ -14,7 +14,7 @@ namespace cinfo
 	class MetadbIndexClient : public metadb_index_client
 	{
 	public:
-		metadb_index_hash transform(const file_info& info, const playable_location& location) override
+		metadb_index_hash transform(const file_info&, const playable_location& location) override
 		{
 			return get_hash(location.get_path());
 		}
