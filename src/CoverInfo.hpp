@@ -7,7 +7,7 @@ namespace cinfo
 	public:
 		CoverInfo(metadb_handle_list_cref handles) : m_handles(handles) {}
 
-		void run(threaded_process_status& status, abort_callback& abort) override
+		void run(threaded_process_status& status, abort_callback& abort) final
 		{
 			auto image_api = fb2k::imageLoaderLite::get();
 			auto transaction_ptr = theAPI()->begin_transaction();

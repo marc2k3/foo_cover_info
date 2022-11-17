@@ -17,19 +17,19 @@ namespace cinfo
 	class ContextMenu : public contextmenu_item_simple
 	{
 	public:
-		GUID get_item_guid(uint32_t index) override
+		GUID get_item_guid(uint32_t index) final
 		{
 			if (index >= context_items.size()) FB2K_BugCheck();
 
 			return *context_items[index].guid;
 		}
 
-		GUID get_parent() override
+		GUID get_parent() final
 		{
 			return guid_context_group;
 		}
 
-		bool context_get_display(uint32_t index, metadb_handle_list_cref, pfc::string_base& out, uint32_t&, const GUID&) override
+		bool context_get_display(uint32_t index, metadb_handle_list_cref, pfc::string_base& out, uint32_t&, const GUID&) final
 		{
 			if (index >= context_items.size()) FB2K_BugCheck();
 
@@ -37,7 +37,7 @@ namespace cinfo
 			return true;
 		}
 
-		bool get_item_description(uint32_t index, pfc::string_base& out) override
+		bool get_item_description(uint32_t index, pfc::string_base& out) final
 		{
 			if (index >= context_items.size()) FB2K_BugCheck();
 
@@ -45,12 +45,12 @@ namespace cinfo
 			return true;
 		}
 
-		uint32_t get_num_items() override
+		uint32_t get_num_items() final
 		{
 			return static_cast<uint32_t>(context_items.size());
 		}
 
-		void context_command(uint32_t index, metadb_handle_list_cref handles, const GUID&) override
+		void context_command(uint32_t index, metadb_handle_list_cref handles, const GUID&) final
 		{
 			if (index >= context_items.size()) FB2K_BugCheck();
 
@@ -66,7 +66,7 @@ namespace cinfo
 			}
 		}
 
-		void get_item_name(uint32_t index, pfc::string_base& out) override
+		void get_item_name(uint32_t index, pfc::string_base& out) final
 		{
 			if (index >= context_items.size()) FB2K_BugCheck();
 

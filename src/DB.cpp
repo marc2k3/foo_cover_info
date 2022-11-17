@@ -14,7 +14,7 @@ namespace cinfo
 	class MetadbIndexClient : public metadb_index_client
 	{
 	public:
-		metadb_index_hash transform(const file_info&, const playable_location& location) override
+		metadb_index_hash transform(const file_info&, const playable_location& location) final
 		{
 			return get_hash(location.get_path());
 		}
@@ -26,7 +26,7 @@ namespace cinfo
 	class InitStageCallback : public init_stage_callback
 	{
 	public:
-		void on_init_stage(uint32_t stage) override
+		void on_init_stage(uint32_t stage) final
 		{
 			if (stage == init_stages::before_config_read)
 			{
@@ -48,7 +48,7 @@ namespace cinfo
 	class InitQuit : public initquit
 	{
 	public:
-		void on_quit() override
+		void on_quit() final
 		{
 			g_cachedAPI.release();
 		}
@@ -57,7 +57,7 @@ namespace cinfo
 	class MetadbDisplayFieldProvider : public metadb_display_field_provider
 	{
 	public:
-		bool process_field(uint32_t index, metadb_handle* handle, titleformat_text_out* out) override
+		bool process_field(uint32_t index, metadb_handle* handle, titleformat_text_out* out) final
 		{
 			const auto hash = get_hash(handle->get_path());
 			const Fields f = get(hash);
@@ -88,12 +88,12 @@ namespace cinfo
 			return false;
 		}
 
-		uint32_t get_field_count() override
+		uint32_t get_field_count() final
 		{
 			return static_cast<uint32_t>(field_names.size());
 		}
 
-		void get_field_name(uint32_t index, pfc::string_base& out) override
+		void get_field_name(uint32_t index, pfc::string_base& out) final
 		{
 			out = field_names[index];
 		}
@@ -102,14 +102,14 @@ namespace cinfo
 	class FileOperationCallback : public file_operation_callback
 	{
 	public:
-		void on_files_copied_sorted(t_pathlist from, t_pathlist to) override
+		void on_files_copied_sorted(t_pathlist from, t_pathlist to) final
 		{
 			update(from, to, false);
 		}
 
-		void on_files_deleted_sorted(t_pathlist) override {}
+		void on_files_deleted_sorted(t_pathlist) final {}
 
-		void on_files_moved_sorted(t_pathlist from, t_pathlist to) override
+		void on_files_moved_sorted(t_pathlist from, t_pathlist to) final
 		{
 			update(from, to, true);
 		}
