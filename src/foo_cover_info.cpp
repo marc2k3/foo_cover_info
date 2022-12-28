@@ -1,9 +1,9 @@
 #include "stdafx.hpp"
 
-namespace cinfo
+namespace
 {
 	DECLARE_COMPONENT_VERSION(
-		component_name,
+		Component::name,
 		"1.0.2",
 		"Copyright (C) 2022-2023 marc2003\n\n"
 		"Build: " __TIME__ ", " __DATE__

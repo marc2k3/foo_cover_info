@@ -1,6 +1,6 @@
 #include "stdafx.hpp"
 
-namespace cinfo
+namespace db
 {
 	static constexpr std::array field_names =
 	{
@@ -33,13 +33,13 @@ namespace cinfo
 				g_cachedAPI = metadb_index_manager_v2::get();
 				try
 				{
-					g_cachedAPI->add(g_client, guid_metadb_index, system_time_periods::week * 4);
+					g_cachedAPI->add(g_client, guids::metadb_index, system_time_periods::week * 4);
 					g_cachedAPI->dispatch_global_refresh();
 				}
 				catch (const std::exception& e)
 				{
-					g_cachedAPI->remove(guid_metadb_index);
-					FB2K_console_print(component_name, " stats: Critical initialisation failure: ", e);
+					g_cachedAPI->remove(guids::metadb_index);
+					FB2K_console_print(Component::name, " stats: Critical initialisation failure: ", e);
 				}
 			}
 		}
@@ -148,7 +148,7 @@ namespace cinfo
 	Fields get(metadb_index_hash hash)
 	{
 		mem_block_container_impl temp;
-		theAPI()->get_user_data(guid_metadb_index, hash, temp);
+		theAPI()->get_user_data(guids::metadb_index, hash, temp);
 		if (temp.get_size() > 0)
 		{
 			try
@@ -183,7 +183,7 @@ namespace cinfo
 	{
 		fb2k::inMainThread([hashes]
 			{
-				theAPI()->dispatch_refresh(guid_metadb_index, hashes);
+				theAPI()->dispatch_refresh(guids::metadb_index, hashes);
 			});
 	}
 
@@ -214,6 +214,6 @@ namespace cinfo
 		writer << f.front_cover_height;
 		writer << f.front_cover_bytes;
 		writer << f.front_cover_format;
-		ptr->set_user_data(guid_metadb_index, hash, writer.m_buffer.get_ptr(), writer.m_buffer.get_size());
+		ptr->set_user_data(guids::metadb_index, hash, writer.m_buffer.get_ptr(), writer.m_buffer.get_size());
 	}
 }

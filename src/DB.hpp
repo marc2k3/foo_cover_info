@@ -1,6 +1,6 @@
 #pragma once
 
-namespace cinfo
+namespace db
 {
 	struct Fields
 	{

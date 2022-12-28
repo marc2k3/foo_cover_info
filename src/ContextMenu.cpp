@@ -1,6 +1,6 @@
 #include "stdafx.hpp"
 
-namespace cinfo
+namespace
 {
 	struct ContextItem
 	{
@@ -10,8 +10,8 @@ namespace cinfo
 
 	static const std::vector<ContextItem> context_items =
 	{
-		{ &guid_context_scan, "Scan for Cover Info" },
-		{ &guid_context_clear, "Clear Cover Info" },
+		{ &guids::context_scan, "Scan for Cover Info" },
+		{ &guids::context_clear, "Clear Cover Info" },
 	};
 
 	class ContextMenu : public contextmenu_item_simple
@@ -26,7 +26,7 @@ namespace cinfo
 
 		GUID get_parent() final
 		{
-			return guid_context_group;
+			return guids::context_group;
 		}
 
 		bool context_get_display(uint32_t index, metadb_handle_list_cref, pfc::string_base& out, uint32_t&, const GUID&) final
@@ -62,7 +62,7 @@ namespace cinfo
 			}
 			else if (index == 1)
 			{
-				reset(handles);
+				db::reset(handles);
 			}
 		}
 
@@ -74,6 +74,6 @@ namespace cinfo
 		}
 	};
 
-	static contextmenu_group_popup_factory g_context_group(guid_context_group, contextmenu_groups::root, component_name, 0);
+	static contextmenu_group_popup_factory g_context_group(guids::context_group, contextmenu_groups::root, Component::name, 0);
 	FB2K_SERVICE_FACTORY(ContextMenu);
 }
